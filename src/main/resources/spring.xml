@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="admin" class="com.jie.entity.Admin">
+        <property name="dddd">
+            <bean factory-bean="date" factory-method="parse">
+                <constructor-arg value="2000-12-12"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="date" class="java.text.SimpleDateFormat">
+        <constructor-arg  value="yyyy-MM-dd"></constructor-arg>
+    </bean>
+
+    <!--创建切入点-->
+    <bean id="adminServiceImpl" class="com.jie.service.AdminServiceImpl">
+    </bean>
+
+    <!--创建通知-->
+    <bean id="myAdvice" class="com.jie.aop.MyDavice"></bean>
+
+    <!--配置将通知织入目标对象-->
+    <aop:config>
+        <!--配置切入点-->
+        <aop:pointcut id="auto" expression="execution(* com.jie.service.*Service.*(..))" />
+        <!-- 描述通知 -->
+        <aop:aspect ref="myAdvice">
+            <!--
+                一共有五种通知
+                 把myAdvice里的before方法,作为前置通知织入到 auto 中
+              -->
+            <aop:before method="before" pointcut-ref="auto" />
+            <aop:after-returning method="afterReturning" pointcut-ref="auto" />
+            <aop:around method="around" pointcut-ref="auto" />
+            <aop:after-throwing method="afterException" pointcut-ref="auto"/>
+            <aop:after method="after" pointcut-ref="auto" />
+        </aop:aspect>
+
+    </aop:config>
+</beans>
