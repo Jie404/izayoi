@@ -12,6 +12,7 @@ public class MyDavice {
     @Pointcut("execution(* com.jie.service.*Service.*(..))")
     public void all(){
 
+        System.out.println("第二次");
     }
 
     //前置通知
